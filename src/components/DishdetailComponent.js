@@ -21,10 +21,8 @@ import { Link } from 'react-router-dom';
           }
 
         handleSubmit(values) {
-            console.log('Current State is: ' + JSON.stringify(values));
-            alert('Current State is: ' + JSON.stringify(values));
-            // event.preventDefault();
             this.toggleModal()
+            this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
         }
     
         render()
@@ -32,7 +30,7 @@ import { Link } from 'react-router-dom';
             return(
                 <React.Fragment><Button className="float-left" outline onClick={this.toggleModal}><span className="fa fa-pencil fa-lg"></span>Submit Comment</Button>
                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                     <ModalBody>
                     <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                             <Row className="form-group">
@@ -122,7 +120,7 @@ import { Link } from 'react-router-dom';
         )
     }
 
-    function RenderComments({comments})
+    function RenderComments({comments, addComment, dishId})
     {
           
           if (comments == null) {
@@ -151,7 +149,7 @@ import { Link } from 'react-router-dom';
                 <ul  className='list-unstyled'>
                     {comments}
                 </ul>
-                <CommentForm/>
+                <CommentForm dishId={dishId} addComment={addComment}/>
                 </div>
             
         )
@@ -183,7 +181,9 @@ import { Link } from 'react-router-dom';
                         <RenderDish dish={props.dish} />
                     </div>
                     <div className="col-12 col-md-5 m-1">
-                        <RenderComments comments={props.comments} />
+                        <RenderComments comments={props.comments}
+                                        addComment={props.addComment}
+                                        dishId={props.dish.id}/>
                     </div>
                 </div>
                 </div>
