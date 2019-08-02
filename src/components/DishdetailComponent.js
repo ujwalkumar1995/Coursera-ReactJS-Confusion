@@ -3,6 +3,8 @@ import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbIte
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 
    
@@ -23,7 +25,8 @@ import { Loading } from './LoadingComponent';
 
         handleSubmit(values) {
             this.toggleModal()
-            this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+            this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
+           
         }
     
         render()
@@ -39,22 +42,22 @@ import { Loading } from './LoadingComponent';
                             </Row>
                             <Row className="form-group">
                             <Col md={12}>
-                                    <Control.select model=".rating" name="rating"
+                                    <Control.select  model=".rating" name="rating" id="rating"
                                         className="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                        <option value="1" selected>1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
                                     </Control.select>
                                 </Col>
                             </Row>
                             <Row className="form-group">
-                            <Label htmlFor="yourname" md={4}>Your Name</Label>
+                            <Label htmlFor="author" md={4}>Your Name</Label>
                             </Row>
                             <Row className="form-group">
                                 <Col md={12}>
-                                    <Control.text model=".yourname" id="yourname" name="yourname"
+                                    <Control.text model=".author" id="" name="author"
                                         placeholder="Your Name"
                                         className="form-control"
                                         validators={{
@@ -63,7 +66,7 @@ import { Loading } from './LoadingComponent';
                                          />
                                     <Errors
                                         className="text-danger"
-                                        model=".yourname"
+                                        model=".author"
                                         show="touched"
                                         messages={{
                                             minLength: 'Must be greater than 2 characters',
@@ -110,18 +113,25 @@ import { Loading } from './LoadingComponent';
     function RenderDish({dish})
     {   
         return(
-            
-                <Card key={dish.id}>
-                    <CardImg width="100%" src={dish.image} alt={dish.name} />
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </Card>
+            <FadeTransform
+            in
+            transformProps={{
+                exitTransform: 'scale(0.5) translateY(-50%)'
+            }}>
+        <Card>
+            <CardImg top src={baseUrl + dish.image} alt={dish.name} />
+            <CardBody>
+                <CardTitle>{dish.name}</CardTitle>
+                <CardText>{dish.description}</CardText>
+            </CardBody>
+        </Card>
+        </FadeTransform>
          
 
         )
     }
 
-    function RenderComments({comments, addComment, dishId})
+    function RenderComments({comments, postComment, dishId})
     {
           
           if (comments == null) {
@@ -129,8 +139,9 @@ import { Loading } from './LoadingComponent';
             return (<div></div>)
         }
       
-        comments = comments.map(comment => {
+      comments=comments.map(comment => {
             return (
+                <Fade in>
                 <li style={{textAlign:"left"}} key={comment.id}>
                     <p>{comment.comment}</p>
                     <p>-- {comment.author},
@@ -142,6 +153,7 @@ import { Loading } from './LoadingComponent';
                         }).format(new Date(comment.date))}
                     </p>
                 </li>
+                </Fade>
             )
         })
         return (
@@ -150,7 +162,7 @@ import { Loading } from './LoadingComponent';
                 <ul  className='list-unstyled'>
                     {comments}
                 </ul>
-                <CommentForm dishId={dishId} addComment={addComment}/>
+                <CommentForm dishId={dishId} postComment={postComment} />
                 </div>
             
         )
@@ -200,9 +212,11 @@ import { Loading } from './LoadingComponent';
                         <RenderDish dish={props.dish} />
                     </div>
                     <div className="col-12 col-md-5 m-1">
+                        <Stagger in>
                         <RenderComments comments={props.comments}
-                                        addComment={props.addComment}
+                                        postComment={props.postComment}
                                         dishId={props.dish.id}/>
+                        </Stagger>
                     </div>
                 </div>
                 </div>
