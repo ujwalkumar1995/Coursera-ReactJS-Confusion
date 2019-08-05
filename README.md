@@ -11,5 +11,4 @@ There is also a feedback form in the contact us tab.
 
 Some of the screenshots from the application are:
 
-![](Coursera-ReactJS-Confusion/Screenshots/
-Screenshot1.png)
+![](Screenshots/Screenshot1.png)
