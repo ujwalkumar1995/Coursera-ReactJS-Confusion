@@ -1,4 +1,5 @@
-<b>Coursera-ReactJS-Confusion<b>
+# The largest heading
+Coursera-ReactJS-Confusion
 
 This is a restaurant web application built as a part of the ReactJS course on coursera.
 
